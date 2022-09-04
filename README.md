@@ -1,1 +1,1 @@
-# EZ-Note
+# Note Taker Starter Code

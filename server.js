@@ -1,53 +1,32 @@
-const express = require('express')
-const app = express()
+//For server to run we need express package; Enables express package
+const express = require('express');
+
+// Runs the express app
+const app = express();
 const PORT = 3000;
-const fs = require('fs');
 
-app.use(express.static('public'));
-app.use(require('./routes'));
-
+//Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Routes
+app.use(require('./routes'));
+
+
+
+const fs = require('fs');
+const middleware = (req, res, next) => {
+    const green = '\x1b[32m%s\x1b[0m';
+    console.log(green, `${req.method} request to ${req.path}`);
+    next();
+};
+
+
+// Middleware
+app.use(middleware);
+
 app.use(express.static('pulic'));
 
-app.post('/notes/api', (req, res) => {  
-    const { title, text } = req.body;
-  
-    if (title && text) {
-      const newNote = {
-        title,
-        text,
-      }
-  
-      const response = {
-        status: 'success',
-        body: newNote,
-      }
 
-      readAndAppend(newNote, './db/db.json');
-      res.json(`Note added successfully`);
-
-    } else {      
-      res.status(500).json('Error in posting reveiw');
-    }
-  });
-
-  const readAndAppend = (content, file) => {
-    fs.readFile(file, 'utf8', (err, data) => {
-        if (err) {
-            console.error(err);
-        } else {
-            const parsedData = JSON.parse(data);
-            parsedData.push(content);
-            writeToFile(file, parsedData);
-        }
-    })
-  }
-
-  const writeToFile = (destination, content) =>
-  fs.writeFile(destination, JSON.stringify(content, null, 4), (err) =>
-    err ? console.error(err) : console.info(`\nData written to ${destination}`)
-  );
 
 app.listen(PORT,()=>console.log(`Now listing on http://localhost:${PORT}`));

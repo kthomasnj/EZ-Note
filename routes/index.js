@@ -2,14 +2,14 @@ const router = require('express').Router();
 const path = require('path');
 const fs = require('fs');
 const id = {};
-const cLogRequests = (req, res, next) => {
+const displayRequests = (req, res, next) => {
     const green = '\x1b[32m%s\x1b[0m';
     console.log(green, `${req.method} request to ${req.path}`);
     next();
 };
 
 // Middleware
-router.use(cLogRequests);
+router.use(displayRequests);
 
 
 router.get('/', function (req, res) {
@@ -29,11 +29,11 @@ router.delete(`/notes/api/:${id}`, function (req, res) {
 });
 
 router.post('/notes/api', (req, res) => {  
-    const { title, text } = req.body;
+    const { title, text, id } = req.body;
 
     console.log(req.body);
   
-    if (title && text) {
+    if (title && text && id) {
       const newNote = {
         title,
         text,

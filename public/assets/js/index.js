@@ -3,6 +3,7 @@ let noteText;
 let saveNoteBtn;
 let newNoteBtn;
 let noteList;
+let newNoteId = 1000;
 
 if (window.location.pathname === '/notes') {
   noteTitle = document.querySelector('.note-title');
@@ -67,16 +68,20 @@ const renderActiveNote = () => {
 };
 
 const handleNoteSave = () => {
+  console.log(noteTitle.value, noteText.value, newNoteId);
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
-    id: renderNoteId,
+    id: newNoteId
   };
   saveNote(newNote).then(() => {
-    notes ++;
     getAndRenderNotes();
     renderActiveNote();
   });
+
+  newNoteId++;
+  console.log('Adding new note!!', newNoteId);
+
 };
 
 // Delete the clicked note
@@ -100,8 +105,9 @@ const handleNoteDelete = (e) => {
 // Sets the activeNote and displays it
 const handleNoteView = (e) => {
   e.preventDefault();
-  activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
+  activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note').id);
   renderActiveNote();
+  console.log(activeNote.id);
 };
 
 // Sets the activeNote to and empty object and allows the user to enter a new note

@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const path = require('path');
 const fs = require('fs');
-const id = {};
+// const id = {};
 const displayRequests = (req, res, next) => {
     const green = '\x1b[32m%s\x1b[0m';
     console.log(green, `${req.method} request to ${req.path}`);
@@ -24,8 +24,11 @@ router.get('/notes/api', function (req, res) {
     res.sendFile(path.join(__dirname, '../db/db.json'));
 });
 
-router.delete(`/notes/api/:${id}`, function (req, res) {
-    res.sendFile(path.join(__dirname, '../db/db.json'));
+router.delete(`/notes/api/:id`, function (req, res) {
+    const { id } = req.params;
+    
+    readAndDelete(id, './db/db.json');
+
 });
 
 router.post('/notes/api', (req, res) => {  
@@ -65,6 +68,27 @@ router.post('/notes/api', (req, res) => {
         }
     })
   }
+
+  const readAndDelete = (id, file) => {
+    fs.readFile(file, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+        } else {
+            const parsedDatas = JSON.parse(data);
+            console.log(parsedDatas);
+            const newParedDatas = [];
+            for (let i = 0; i < parsedDatas.length; i++) {
+              const parsedData = parsedDatas[i];
+              if(parsedData.id != id) {
+                newParedDatas.push(parsedData);
+              }
+            }
+            
+            writeToFile(file, newParedDatas);
+        }
+    })
+  }
+  
 
   const writeToFile = (destination, content) =>
   fs.writeFile(destination, JSON.stringify(content, null, 4), (err) =>

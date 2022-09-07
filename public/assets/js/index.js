@@ -35,7 +35,8 @@ const getNotes = () =>
   });
 
 const saveNote = (note) =>
-  fetch('/notes/api', {
+  fetch(
+    '/notes/api', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -68,7 +69,6 @@ const renderActiveNote = () => {
 };
 
 const handleNoteSave = () => {
-  console.log(noteTitle.value, noteText.value, newNoteId);
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
@@ -80,8 +80,6 @@ const handleNoteSave = () => {
   });
 
   newNoteId++;
-  console.log('Adding new note!!', newNoteId);
-
 };
 
 // Delete the clicked note
@@ -91,10 +89,15 @@ const handleNoteDelete = (e) => {
 
   const note = e.target;
   const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).id;
+  const deleteEl = note.parentElement;
+
+  console.log(note);
 
   if (activeNote.id === noteId) {
     activeNote = {};
   }
+  
+  deleteEl.style.display = "none";
 
   deleteNote(noteId).then(() => {
     getAndRenderNotes();

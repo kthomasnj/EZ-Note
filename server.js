@@ -3,7 +3,7 @@ const express = require('express');
 
 // Runs the express app
 const app = express();
-const port = process.env.PORT || 3000
+const PORT = process.env.PORT || 3001
 
 //Middleware
 app.use(express.json());
